@@ -20,31 +20,29 @@ console.log("[Async Exercise #1]")
 
 function playerStats (callback) {
   var API = DataAPI.Callback;
-  console.log("API",API)
-
+  //console.log("API",API)
 
   API.getAllPlayers(function (players) {
+     API.getAllGames(function(games){
+       var data = players.map(function(player){
+         var playerID = player.id;
+         var playerName = player.name;
+         var didPlayerWinGame = isWinningGameFor(playerID);
+         var playerGamesWon = games.filter(function(game){
+           return didPlayerWinGame(game);
+         });
+         var playerData = {playerId: player.id, playerName: player.name, winCount: playerGamesWon.length };
+         //console.log(JSON.stringify(playerGamesWon))
+         return playerData;
 
-    var playerNames = players.map(function(player){
-      // console.log(player.id) 10,11,12,13
-      var playerGames = API.getAllGames(function(games){
-        //console.log(games)
-        return games;
-      });
-      console.log(playerGames)
 
-      var playerWon = isWinningGameFor(player.id);
-      //console.log(DataAPI.games)
-      // var playerGames = DataAPI.games.filter(function(game) {
-      //   return playerWon(game);
-      // });
-
-      //console.log(playerGames);
-      var result = {};
-        return {playerId: player.id, playerName: player.name};
-        });
+       });
+       console.log(data)
+       callback(data);
      })
-  };
+  })
+  //console.log(callback(playerData));
+}
   // return [{ playerId: Number, playerName: String, winCount: Number })]
 
 function isWinningGameFor (playerId) {
