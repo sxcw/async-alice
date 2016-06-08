@@ -20,13 +20,39 @@ console.log("[Async Exercise #1]")
 
 function playerStats (callback) {
   var API = DataAPI.Callback;
+  console.log("API",API)
+
 
   API.getAllPlayers(function (players) {
-    // TODO: Implement the rest of this function
-  });
+
+    var playerNames = players.map(function(player){
+      // console.log(player.id) 10,11,12,13
+      var playerGames = API.getAllGames(function(games){
+        //console.log(games)
+        return games;
+      });
+      console.log(playerGames)
+
+      var playerWon = isWinningGameFor(player.id);
+      //console.log(DataAPI.games)
+      // var playerGames = DataAPI.games.filter(function(game) {
+      //   return playerWon(game);
+      // });
+
+      //console.log(playerGames);
+      var result = {};
+        return {playerId: player.id, playerName: player.name};
+        });
+     })
+  };
+  // return [{ playerId: Number, playerName: String, winCount: Number })]
+
+function isWinningGameFor (playerId) {
+  return function (game) {
+    return game.player1_id === playerId && game.player1_score === 100
+        || game.player2_id === playerId && game.player2_score === 100;
+  };
 }
-
-
 
 
 //
