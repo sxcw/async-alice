@@ -25,25 +25,19 @@ function playerStats (callback) {
   API.getAllPlayers(function (players) {
      API.getAllGames(function(games){
        var data = players.map(function(player){
-         var playerID = player.id;
-         var playerName = player.name;
-         var didPlayerWinGame = isWinningGameFor(playerID);
+         var didPlayerWinGame = isWinningGameFor(player.id);
          var playerGamesWon = games.filter(function(game){
            return didPlayerWinGame(game);
          });
          var playerData = {playerId: player.id, playerName: player.name, winCount: playerGamesWon.length };
          //console.log(JSON.stringify(playerGamesWon))
          return playerData;
-
-
        });
-       console.log(data)
        callback(data);
      })
   })
-  //console.log(callback(playerData));
 }
-  // return [{ playerId: Number, playerName: String, winCount: Number })]
+
 
 function isWinningGameFor (playerId) {
   return function (game) {
