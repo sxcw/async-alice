@@ -27,11 +27,12 @@ window.DataAPI = (function () {
   //
   // The "Realistic API"
   //
+  // useful function for getting names
   CallbackAPI.getPlayerById = function (playerId, callback) {
     var player = players.find( p => p.id === playerId );
     simulateNetworkRequest(player, callback);
   };
-
+  // check if the player with playerId happens to be player 1 or 2
   CallbackAPI.getPlayerGames = function (playerId, callback) {
     var pgames = games.filter( g => g.player1_id === playerId || g.player2_id === playerId );
     simulateNetworkRequest(pgames, callback);

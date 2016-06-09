@@ -31,13 +31,24 @@ function playerStats (callback) {
          });
          var playerData = {playerId: player.id, playerName: player.name, winCount: playerGamesWon.length };
          //console.log(JSON.stringify(playerGamesWon))
+         //console.log(JSON.stringify(playerData));
          return playerData;
        });
+       //console.log(JSON.stringify(data));
        callback(data);
      })
   })
 }
 
+playerStats(function (stats) {
+  assert( stats.length, 4 );
+
+  assert( stats.find( s => s.playerId === 10 ).winCount, 6 );
+  assert( stats.find( s => s.playerId === 11 ).winCount, 10 );
+  assert( stats.find( s => s.playerId === 12 ).winCount, 12 );
+  assert( stats.find( s => s.playerId === 13 ).winCount, 13 );
+  console.log("[Async Exercise #1] All good!");
+});
 
 function isWinningGameFor (playerId) {
   return function (game) {
@@ -85,12 +96,61 @@ playerStats(function (stats) {
 
 console.log("[Async Exercise #2]")
 
-function playerStats2 (playerIds, callback) {
-  var API = DataAPI.Callback;
-  // var API = DataAPI.Promise;
-  // TODO: Implement this function
-}
+// function playerStats2 (playerIds, callback) {
 
+//   var API = DataAPI.Callback;
+
+//   // var API = DataAPI.Promise;
+//   // pass each id to getPlayerById function as an argument.
+//   playerIds.forEach(function(playerId){
+//     API.getPlayerById(playerId,function(player){
+//       API.getPlayerGames(playerId,function(game){
+//         console.log(JSON.stringify(game));
+
+//       })
+//        console.log(player.name)
+//     })
+
+//   })
+
+
+// }
+
+
+function playerStats2 (playerIds, callback) {
+  var data = [];
+  var API = DataAPI.Callback;
+
+  // var API = DataAPI.Promise;
+  // pass each id to getPlayerById function as an argument.
+
+  playerIds.forEach(function(playerId){
+
+    API.getPlayerById(playerId,function(player){
+      API.getPlayerGames(playerId,function(games){
+        var isWin = isWinningGameFor(playerId);
+        //console.log(isWin)
+        var gamesWon = games.filter(function(game){
+          // console.log(game.player1_id, player.id)
+          return isWin(game);
+        });
+        //console.log(gamesWon)
+        var playerData = {playerId : playerId, playerName: player.name, winCount: gamesWon.length};
+        console.log(playerData);
+        data.push(playerData);
+        console.log(data)
+        if(data.length === 4) {
+          callback(data);
+        }
+
+      })
+    })
+    //callback(data);
+
+  })
+  //console.log(data);
+
+}
 playerStats2([10,11,12,13], function (stats) {
   assert( stats.length, 4 );
 
